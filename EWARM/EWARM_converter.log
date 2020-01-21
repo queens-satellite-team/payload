@@ -1,0 +1,9 @@
+Project: EWARM
+Converter: IARProjectParser
+Date: 20200121
+
+Project needs GCC compatible startup code and linker script
+PayloadTest_CM4: ATTENTION: Failed to determine FPU core for the device: DeviceInfo [vendorName=STMicroelectronics, mcuName=STM32H745ZI_CM4], MCU information uncertain.
+PayloadTest_CM4: ATTENTION: Failed to determine FPU core for the device: DeviceInfo [vendorName=STMicroelectronics, mcuName=STM32H745ZI_CM4], MCU information uncertain.
+PayloadTest_CM7: ATTENTION: Failed to determine FPU core for the device: DeviceInfo [vendorName=STMicroelectronics, mcuName=STM32H745ZI_CM7], MCU information uncertain.
+PayloadTest_CM7: ATTENTION: Failed to determine FPU core for the device: DeviceInfo [vendorName=STMicroelectronics, mcuName=STM32H745ZI_CM7], MCU information uncertain.
