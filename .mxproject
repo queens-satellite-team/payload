@@ -1,7 +1,7 @@
 [CortexM7:PreviousGenFiles]
-HeaderPath=C:/Users/QSET/Documents/STM32Stuff/PayloadTest/CM7/Inc
+HeaderPath=C:/Users/QSET/Documents/STM32Stuff/payload-software/CM7/Inc
 HeaderFiles=stm32h7xx_it.h;stm32h7xx_hal_conf.h;main.h;jpeg_utils_conf.h;
-SourcePath=C:/Users/QSET/Documents/STM32Stuff/PayloadTest/CM7/Src
+SourcePath=C:/Users/QSET/Documents/STM32Stuff/payload-software/CM7/Src
 SourceFiles=stm32h7xx_it.c;stm32h7xx_hal_msp.c;main.c;
 
 [CortexM7:PreviousLibFiles]
@@ -13,9 +13,9 @@ HeaderPath=..\Drivers\STM32H7xx_HAL_Driver\Inc;..\Drivers\STM32H7xx_HAL_Driver\I
 CDefines=CORE_CM7;USE_HAL_DRIVER;STM32H745xx;USE_HAL_DRIVER;USE_HAL_DRIVER;
 
 [CortexM4:PreviousGenFiles]
-HeaderPath=C:/Users/QSET/Documents/STM32Stuff/PayloadTest/CM4/Inc
+HeaderPath=C:/Users/QSET/Documents/STM32Stuff/payload-software/CM4/Inc
 HeaderFiles=stm32h7xx_it.h;stm32h7xx_hal_conf.h;main.h;
-SourcePath=C:/Users/QSET/Documents/STM32Stuff/PayloadTest/CM4/Src
+SourcePath=C:/Users/QSET/Documents/STM32Stuff/payload-software/CM4/Src
 SourceFiles=stm32h7xx_it.c;stm32h7xx_hal_msp.c;main.c;
 
 [CortexM4:PreviousLibFiles]
@@ -27,9 +27,9 @@ HeaderPath=..\Drivers\STM32H7xx_HAL_Driver\Inc;..\Drivers\STM32H7xx_HAL_Driver\I
 CDefines=CORE_CM4;USE_HAL_DRIVER;STM32H745xx;USE_HAL_DRIVER;USE_HAL_DRIVER;
 
 [PreviousGenFiles]
-HeaderPath=C:/Users/QSET/Documents/STM32Stuff/PayloadTest/CM7/Inc
+HeaderPath=C:/Users/QSET/Documents/STM32Stuff/payload-software/CM7/Inc
 HeaderFiles=stm32h7xx_it.h;stm32h7xx_hal_conf.h;main.h;jpeg_utils_conf.h;
-SourcePath=C:/Users/QSET/Documents/STM32Stuff/PayloadTest/CM7/Src
+SourcePath=C:/Users/QSET/Documents/STM32Stuff/payload-software/CM7/Src
 SourceFiles=stm32h7xx_it.c;stm32h7xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
