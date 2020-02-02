@@ -1369,6 +1369,8 @@
           <state>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
           <state>$PROJ_DIR$/../Utilities/JPEG</state>
           <state>$PROJ_DIR$/../Middlewares/Third_Party/LibJPEG/include</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Inc</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc</state>
           <state>$PROJ_DIR$/../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
           <state>$PROJ_DIR$/../Drivers/CMSIS/Include</state>
         </option>
@@ -2091,6 +2093,18 @@
           <name>$PROJ_DIR$/../CM7/Src/libjpeg.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$/../CM7/Src/usb_device.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../CM7/Src/usbd_conf.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../CM7/Src/usbd_desc.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../CM7/Src/usbd_cdc_if.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$/../CM7/Src/stm32h7xx_it.c</name>
         </file>
         <file>
@@ -2104,7 +2118,22 @@
     <group>
       <name>STM32H7xx_HAL_Driver</name>
       <file>
-        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c</name>
+        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c</name>
@@ -2140,6 +2169,9 @@
         <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c</name>
       </file>
       <file>
@@ -2162,18 +2194,6 @@
       </file>
       <file>
         <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hcd.c</name>
-        <excluded>
-          <configuration>PayloadTest_CM4</configuration>
-        </excluded>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c</name>
-        <excluded>
-          <configuration>PayloadTest_CM4</configuration>
-        </excluded>
       </file>
     </group>
     <group>
@@ -2462,6 +2482,36 @@
       </file>
       <file>
         <name>$PROJ_DIR$/../Middlewares/Third_Party/LibJPEG/source/jmemnobs.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+    </group>
+    <group>
+      <name>USB_Device_Library</name>
+      <excluded>
+        <configuration>PayloadTest_CM4</configuration>
+      </excluded>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</name>
         <excluded>
           <configuration>PayloadTest_CM4</configuration>
         </excluded>
