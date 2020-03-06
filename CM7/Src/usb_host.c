@@ -68,6 +68,7 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id);
 void userFunction(void){
   if(Appli_state==APPLICATION_READY){
       USBH_CDC_Transmit(&hUsbHostFS,tx_buffer,0x9);
+      //USBD_CtlSendData();
   }
 }
 
