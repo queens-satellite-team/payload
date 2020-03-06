@@ -58,9 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define A_NEW_CONST 25
 /* USER CODE BEGIN Private defines */
-
+void userFunction(void);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

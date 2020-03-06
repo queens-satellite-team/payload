@@ -1369,8 +1369,12 @@
           <state>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
           <state>$PROJ_DIR$/../Utilities/JPEG</state>
           <state>$PROJ_DIR$/../Middlewares/Third_Party/LibJPEG/include</state>
-          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Inc</state>
-          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Core/Inc</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/AUDIO/Inc</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Inc</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Inc</state>
+          <state>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/MTP/Inc</state>
           <state>$PROJ_DIR$/../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
           <state>$PROJ_DIR$/../Drivers/CMSIS/Include</state>
         </option>
@@ -2093,16 +2097,10 @@
           <name>$PROJ_DIR$/../CM7/Src/libjpeg.c</name>
         </file>
         <file>
-          <name>$PROJ_DIR$/../CM7/Src/usb_device.c</name>
+          <name>$PROJ_DIR$/../CM7/Src/usb_host.c</name>
         </file>
         <file>
-          <name>$PROJ_DIR$/../CM7/Src/usbd_conf.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../CM7/Src/usbd_desc.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../CM7/Src/usbd_cdc_if.c</name>
+          <name>$PROJ_DIR$/../CM7/Src/usbh_conf.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$/../CM7/Src/stm32h7xx_it.c</name>
@@ -2118,13 +2116,7 @@
     <group>
       <name>STM32H7xx_HAL_Driver</name>
       <file>
-        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.c</name>
-        <excluded>
-          <configuration>PayloadTest_CM4</configuration>
-        </excluded>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.c</name>
+        <name>$PROJ_DIR$/../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hcd.c</name>
         <excluded>
           <configuration>PayloadTest_CM4</configuration>
         </excluded>
@@ -2488,30 +2480,96 @@
       </file>
     </group>
     <group>
-      <name>USB_Device_Library</name>
+      <name>USB_Host_Library</name>
       <excluded>
         <configuration>PayloadTest_CM4</configuration>
       </excluded>
       <file>
-        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.c</name>
         <excluded>
           <configuration>PayloadTest_CM4</configuration>
         </excluded>
       </file>
       <file>
-        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</name>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ctlreq.c</name>
         <excluded>
           <configuration>PayloadTest_CM4</configuration>
         </excluded>
       </file>
       <file>
-        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ioreq.c</name>
         <excluded>
           <configuration>PayloadTest_CM4</configuration>
         </excluded>
       </file>
       <file>
-        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</name>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/AUDIO/Src/usbh_audio.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_mouse.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_parser.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc_bot.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc_scsi.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/MTP/Src/usbh_mtp.c</name>
+        <excluded>
+          <configuration>PayloadTest_CM4</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/ST/STM32_USB_Host_Library/Class/MTP/Src/usbh_mtp_ptp.c</name>
         <excluded>
           <configuration>PayloadTest_CM4</configuration>
         </excluded>

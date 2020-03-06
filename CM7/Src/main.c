@@ -21,7 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "libjpeg.h"
-#include "usb_device.h"
+#include "usb_host.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -125,7 +125,7 @@ Error_Handler();
   MX_GPIO_Init();
   MX_JPEG_Init();
   MX_LIBJPEG_Init();
-  MX_USB_DEVICE_Init();
+  MX_USB_HOST_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -137,8 +137,9 @@ Error_Handler();
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  MX_USB_HOST_Process();
     /* USER CODE BEGIN 3 */
+	  userFunction();
   }
   /* USER CODE END 3 */
 }
