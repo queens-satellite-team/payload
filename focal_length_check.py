@@ -3,6 +3,12 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import math as m
 import itertools
+import argparse
+import pandas as pd
+
+A = 400000 #from CSDC rules, assume 400km altitude
+degToRad = m.pi / 180
+
 
 def getFOVtrue(feye, fobj, Sx, Sy, A):
     """
@@ -20,7 +26,7 @@ def getFOVtrue(feye, fobj, Sx, Sy, A):
     return FOVtrue_x, FOVtrue_y
 
 #ground area as function of fobj and feye (x and y)
-def getGndA(FOVtrue_x, FOVtrue_y, A):
+def getGndA(FOVtrue_x, FOVtrue_y, sx, sy, fobj, feye, A):
     """
     Get ground area in x and y from true FOV and altitude
     """
@@ -29,15 +35,24 @@ def getGndA(FOVtrue_x, FOVtrue_y, A):
     gndAx = 2 * A * m.tan(FOVtrue_x)
     gndAy = 2 * A * m.tan(FOVtrue_y)
 
-    return gndAx, gndAy
+    #using condition for sensor to contain enough ground area info
+    M = fobj / feye
+    gndAx_sensor = sx * M * gndAx
+    gndAy_sensor = sx * M * gndAy
 
-def getRes(Gnd_Ax, Gnd_Ay, Sx, Sy):
+    return gndAx_sensor, gndAy_sensor
+
+def getRes(FOVtrue_x, FOVtrue_y, Sx, Sy):
     """
     Get ground resolution in x and y from true FOV and altitude
     """
 
-    Rx = Gnd_Ax / Sx
-    Ry = Gnd_Ay / Sy
+    #inputs to tan already in radians
+    gndAx = 2 * A * m.tan(FOVtrue_x)
+    gndAy = 2 * A * m.tan(FOVtrue_y)
+
+    Rx = gndAx / Sx
+    Ry = gndAy / Sy
     return Rx, Ry
 
 def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy):
@@ -57,91 +72,149 @@ def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy):
 
     return AreaCond and ResCond and lenCond and widthCond
 
+def getTelescopeLength(fobj, feye):
+    """ 
+    Return the telescope length in m assuming Keplerian setup
+    Takes fobj (m), feye (m)
+    """ 
 
+    return fobj + 2 * feye
 
-#altitude
-A = 400000 #from CSDC rules, assume 400km altitude
+def findCombInList(allCombs, setCombs):
+    """
+    Given a list of all valid lens combinations and a second list, find which
+    tuples in the 2nd list are also in the 1st. 
+    """
 
-degToRad = m.pi / 180
+    return [tup for tup in setCombs if tup in allCombs]
 
-#focal lengths in m (rounded to nearest mm)
-feyes = np.round(np.arange(0.005, 0.05, 0.001), decimals=3) #m
-fobjs = np.round(np.arange(0.005, 0.1, 0.001), decimals=3) #m
+def main(sx, sy, pix_res_x, pix_res_y, verbose, plot=False):
 
-#single pixel sizes of the sensor (picam for now)
-sx, sy = 0.00367, 0.00274 #m
-pix_res_x, pix_res_y = 2592, 1944
+    #focal lengths in m (rounded to nearest mm)
+    feyes = np.round(np.arange(0.005, 0.05, 0.001), decimals=3) #m
+    fobjs = np.round(np.arange(0.01, 0.1, 0.001), decimals=3) #m
 
-#to save ground area values
-GndAxs = np.empty((len(feyes), len(fobjs)))
-GndAys = np.empty((len(feyes), len(fobjs)))
+    #to save ground area values
+    GndAxs = np.empty((len(feyes), len(fobjs)))
+    GndAys = np.empty((len(feyes), len(fobjs)))
 
-#to save ground resolution values
-GndResx = np.empty((len(feyes), len(fobjs)))
-GndResy = np.empty((len(feyes), len(fobjs)))
+    #to save ground resolution values
+    GndResx = np.empty((len(feyes), len(fobjs)))
+    GndResy = np.empty((len(feyes), len(fobjs)))
 
-#to save bool of validity
-valid = np.empty((len(feyes), len(fobjs)))
+    #to save bool of validity
+    valid = np.empty((len(feyes), len(fobjs)))
 
-#iter possible objective and eyepiece focal lengths + sensor res and pixel size
-for i, feye in enumerate(feyes):
-    for j, fobj in enumerate(fobjs):
+    #iter possible objective and eyepiece focal lengths + sensor res and pixel size
+    for i, feye in enumerate(feyes):
+        for j, fobj in enumerate(fobjs):
+            #ground areas
+            FOV_truex, FOV_truey = getFOVtrue(feye, fobj, sx, sy, A)
+
+            GndAxs[i, j], GndAys[i, j] = getGndA(FOV_truex, FOV_truey, sx, sy, fobj, feye, A)
+
+            #ground resolutions
+            GndResx[i, j], GndResy[i, j] = getRes(FOV_truex, FOV_truey, pix_res_x, pix_res_y)
+
+            #check if this combination is valid
+            valid[i, j] = checkValid(fobj, feye, GndAxs[i, j], GndAys[i, j], GndResx[i, j], GndResy[i, j]) 
+
+    #grids of focal lengths
+    Fobjs, Feyes = np.meshgrid(fobjs, feyes)
+
+    ###Plotting
+    if plot:
+        #plot ground areas, resolutions for both altitude bounds
+        fig = plt.figure(figsize=plt.figaspect(0.5))
+        ax = fig.add_subplot(1, 2, 1, projection='3d')
+
         #ground areas
-        FOV_truex, FOV_truey = getFOVtrue(feye, fobj, sx, sy, A)
+        ax.scatter3D(Feyes, Fobjs, GndAxs, 'gray', s=10)
+        ax.set_xlabel("eyepiece f (m)")
+        ax.set_ylabel("objective f (m)")
+        ax.set_zlabel("Gnd Ax (m)")
 
-        GndAxs[i, j], GndAys[i, j] = getGndA(FOV_truex, FOV_truey, A)
+        #for resolutions
+        ax = fig.add_subplot(1, 2, 2, projection='3d')
+        ax.scatter3D(Feyes, Fobjs, GndResx, s=10)
+        ax.set_xlabel("eyepiece f (m)")
+        ax.set_ylabel("objective f (m)")
+        ax.set_zlabel("Res x (m)")
 
-        #ground resolutions
-        GndResx[i, j], GndResy[i, j] = getRes(GndAxs[i, j], GndAys[i, j], pix_res_x, pix_res_y)
-
-        #check if this combination is valid
-        valid[i, j] = checkValid(fobj, feye, GndAxs[i, j], GndAys[i, j], GndResx[i, j], GndResy[i, j]) 
-
-#grids of focal lengths
-Fobjs, Feyes = np.meshgrid(fobjs, feyes)
-
-###Plotting
-#plot ground areas, resolutions for both altitude bounds
-fig = plt.figure(figsize=plt.figaspect(0.5))
-ax = fig.add_subplot(1, 2, 1, projection='3d')
-
-#ground areas
-ax.scatter3D(Feyes, Fobjs, GndAxs, 'gray', s=10)
-ax.set_xlabel("eyepiece f (m)")
-ax.set_ylabel("objective f (m)")
-ax.set_zlabel("Gnd Ax (m)")
-
-#for resolutions
-ax = fig.add_subplot(1, 2, 2, projection='3d')
-ax.scatter3D(Feyes, Fobjs, GndResx, s=10)
-ax.set_xlabel("eyepiece f (m)")
-ax.set_ylabel("objective f (m)")
-ax.set_zlabel("Res x (m)")
-
-plt.show()
+        plt.show()
 
 
-#get just valid combinations
-inds = np.argwhere(valid)
-print(f"N valid combinations: {len(inds)}")
+    #get just valid combinations
+    inds = np.argwhere(valid)
+    print(f"N valid combinations for this camera: {len(inds)}")
 
-#map these indices to (feye, fobj) pairs
-#valid_f_lengths = np.empty(inds.shape)
-def get_flengths(ind):
-    return feyes[ind[0]], fobjs[ind[1]]
-valid_f_lengths = list(map(get_flengths, inds))
+    if verbose > 0:
+        for i in inds:
+            print(valid[i])
 
-#check if any of the lenses we have will work
-lenses = np.array([15, 22.5, 100, 13.5, 15]) #mm
-lenses /= 1000 #mm to m
+    #map these indices to (feye, fobj) pairs
+    #valid_f_lengths = np.empty(inds.shape)
+    def get_flengths(ind):
+        return feyes[ind[0]], fobjs[ind[1]]
+    valid_f_lengths = list(map(get_flengths, inds))
 
-#all permutations of these lenses
-lens_perms = list(itertools.permutations(lenses, 2))
+    """
+    #check if any of the lenses we have will work
+    lenses = np.array([15, 22.5, 100, 13.5, 15]) #mm
+    lenses /= 1000 #mm to m
 
-#check which permutations are in the list of valid permutations
-vs = [tup for tup in lens_perms if tup in valid_f_lengths]
-print(f"N of lens combinations we have which are valid: {len(vs)}")
+    #all permutations of these lenses
+    lens_perms = list(itertools.permutations(lenses, 2))
+
+    #check which permutations are in the list of valid permutations
+    vs = [tup for tup in lens_perms if tup in valid_f_lengths]
+    print(f"N of lens combinations we own which are valid: {len(vs)}")
+
+    print("All combinations in mm")
+    for c in valid_f_lengths:
+        print(f"{c[0] * 1000} mm, {c[1] * 1000} mm")
+    """
+
+    """
+    #export to a spreadsheet
+    df = pd.DataFrame(valid_f_lengths)
+    filepath = 'lens_combs.xlsx'
+    df.to_excel(filepath, index=False)
+    """
+
+    """
+    ###Try to match valid combinations with standard lens sizes
+    #From https://www.edmundoptics.ca/search/?criteria=convex&Tab=Products#28233=28233_s%3AUGxhbm8tQ29udmV4IExlbnM1&ProductFamilies_ii=ProductFamilies_ii%3AMTIwMDI1
+    edmund_flengths = np.array([36.0, 27.0, 30.0, 22.5, 18.0, 13.5, 24.0, 75.0, 100.0, 
+        9.0, 12.0, 18.0, 50.0, 72.0, 10.0, 25.0, 15.0, 6.0, 150.0, 48.0, 60.0, 
+        84.0, 125.0, 175.0, 36.0, 80.0, 200.0, 400.0, 1.0, 1.5])
+    edmund_flengths /= 1000 #mm to m
+    #sort, uniques
+    edmund_flengths = list(set(edmund_flengths))
+    edmund_flengths.sort()
+
+    edmundPerms = list(itertools.permutations(edmund_flengths, 2))
+    edmundValid = findCombInList(valid_f_lengths, edmundPerms)
 
 
+    print("Valid edmund combinations")
+    for c in edmundValid:
+        print(f"feye: {c[0] * 1000} mm, fobj: {c[1] * 1000} mm, telescope length: {getTelescopeLength(c[1], c[0]) * 100} cm")
+    """
 
 
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--size", default=(0.00363, 0.00272), 
+        help="Size of the sensor in m (x, y)")
+    parser.add_argument("-c", "--pix_count", default=(2592, 1944), 
+        help="Pixel count of the sensor (x, y)")
+    parser.add_argument('-p', '--plot', default=False, 
+        help='Flag to generate plots of ground area and ground resolution vs focal lengths')
+    parser.add_argument('-v', '--verbose', action='count', default=0, 
+        help='Verbosity to print the valid lens combinations')
+    args = parser.parse_args()
+
+
+    main(*args.size, *args.pix_count, args.verbose)
