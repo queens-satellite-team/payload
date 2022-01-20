@@ -1,10 +1,9 @@
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
 import math as m
 import itertools
 import argparse
 import pandas as pd
+import numpy as np
 
 A = 400000 #from CSDC rules, assume 400km altitude
 degToRad = m.pi / 180
@@ -28,7 +27,7 @@ def getFOVtrue(feye, fobj, Sx, Sy, A):
 #ground area as function of fobj and feye (x and y)
 def getGndA(FOVtrue_x, FOVtrue_y, sx, sy, fobj, feye, A):
     """
-    Get ground area in x and y from true FOV and altitude
+    Get ground area in x and y from true FOV and altitude (in m)
     """
 
     #inputs to tan already in radians
@@ -55,7 +54,7 @@ def getRes(FOVtrue_x, FOVtrue_y, Sx, Sy):
     Ry = gndAy / Sy
     return Rx, Ry
 
-def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy):
+def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy, v):
     """
     Return True if the focal lengths, ground area, resolution satisfy the conditions:
     -ground area between 40x40 and 100x100km
@@ -68,7 +67,16 @@ def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy):
     AreaCond = (GndAx * GndAy > 40000*40000) and (GndAx * GndAy < 100000*100000)
     ResCond = Resx < 45 and Resy < 45
     lenCond = fobj + 2*feye < (15 / 100)
-    widthCond = True #TODO add lens diameters
+
+    #assume 1:1 mapping from focal length to lens diameter
+    widthCond = fobj < 0.08 and feye < 0.08 #max 8cm
+
+    #print reasons why lens combinatinos don't work for each focal length pair
+    if v > 1:
+        if not ResCond:
+            print(f"Bad ground resolution for lenses {fobj}, {feye}: {Resx} / {Resy}")
+        if not AreaCond:
+            print(f"Bad ground area for lenses {fobj}, {feye}: {GndAx} / {GndAy}")
 
     return AreaCond and ResCond and lenCond and widthCond
 
@@ -117,7 +125,7 @@ def main(sx, sy, pix_res_x, pix_res_y, verbose, plot=False):
             GndResx[i, j], GndResy[i, j] = getRes(FOV_truex, FOV_truey, pix_res_x, pix_res_y)
 
             #check if this combination is valid
-            valid[i, j] = checkValid(fobj, feye, GndAxs[i, j], GndAys[i, j], GndResx[i, j], GndResy[i, j]) 
+            valid[i, j] = checkValid(fobj, feye, GndAxs[i, j], GndAys[i, j], GndResx[i, j], GndResy[i, j], verbose) 
 
     #grids of focal lengths
     Fobjs, Feyes = np.meshgrid(fobjs, feyes)
@@ -148,15 +156,16 @@ def main(sx, sy, pix_res_x, pix_res_y, verbose, plot=False):
     inds = np.argwhere(valid)
     print(f"N valid combinations for this camera: {len(inds)}")
 
-    if verbose > 0:
-        for i in inds:
-            print(valid[i])
 
     #map these indices to (feye, fobj) pairs
     #valid_f_lengths = np.empty(inds.shape)
     def get_flengths(ind):
         return feyes[ind[0]], fobjs[ind[1]]
     valid_f_lengths = list(map(get_flengths, inds))
+
+    if verbose > 0:
+        for fl in valid_f_lengths:
+            print(f"The combination fobj: {fl[1]}, feye: {fl[0]} is valid")
 
     """
     #check if any of the lenses we have will work
@@ -206,9 +215,9 @@ def main(sx, sy, pix_res_x, pix_res_y, verbose, plot=False):
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--size", default=(0.00363, 0.00272), 
+    parser.add_argument("-s", "--size", nargs='+', default=(0.00363, 0.00272), type=float, 
         help="Size of the sensor in m (x, y)")
-    parser.add_argument("-c", "--pix_count", default=(2592, 1944), 
+    parser.add_argument("-c", "--pix_count", nargs='+', default=(2592, 1944), type=float, 
         help="Pixel count of the sensor (x, y)")
     parser.add_argument('-p', '--plot', default=False, 
         help='Flag to generate plots of ground area and ground resolution vs focal lengths')
