@@ -61,6 +61,9 @@ def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy, v):
     -resolution < 45m
     -telescope length < 1.5U (15cm)
     -telescope width < 8cm
+
+    Other attributes
+    -power draw is minimal ()
     """
 
     #all in m
@@ -70,6 +73,7 @@ def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy, v):
 
     #assume 1:1 mapping from focal length to lens diameter
     widthCond = fobj < 0.08 and feye < 0.08 #max 8cm
+
 
     #print reasons why lens combinatinos don't work for each focal length pair
     if v > 1:
@@ -215,8 +219,10 @@ def main(sx, sy, pix_res_x, pix_res_y, verbose, plot=False):
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--size", nargs='+', default=(0.00363, 0.00272), type=float, 
+    parser.add_argument("-s", "--sensor_size", nargs='+', default=(0.00363, 0.00272), type=float, 
         help="Size of the sensor in m (x, y)")
+    parser.add_argument("-ps", "--pixel_size", nargs='+', default=None, type=float, 
+        help="Size of the sensor in micro meters (x, y)")
     parser.add_argument("-c", "--pix_count", nargs='+', default=(2592, 1944), type=float, 
         help="Pixel count of the sensor (x, y)")
     parser.add_argument('-p', '--plot', default=False, 
@@ -225,5 +231,8 @@ if __name__ == "__main__":
         help='Verbosity to print the valid lens combinations')
     args = parser.parse_args()
 
-
-    main(*args.size, *args.pix_count, args.verbose)
+    if args.pixel_size is not None:
+        args.pixel_size = np.array(args.pixel_size)
+        args.pixel_size *= 10e-7
+        args.sensor_size = args.pixel_size * np.array(args.pix_count)
+    main(*args.sensor_size, *args.pix_count, args.verbose)
