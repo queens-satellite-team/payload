@@ -6,7 +6,8 @@ This is necessary since the lenses which will fit our imaging requirements depen
 The optics equations used to calculate the ground area and resolution are described here:
 
 ### Inputs
-Size / s (x, y): The size of the camera's image sensor in metres (eg. 0.00363, 0.00272)
+size / s (x, y): The size of the camera's image sensor in metres (eg. 0.00363, 0.00272)\
+pixel_size / ps (x, y): The size of the sensor in micrometers (eg. 6.4, 6.4)\
 pix_count / p (x, y): The pixel count on the sensor (eg. 2592, 1944)
 
 ### Outputs
