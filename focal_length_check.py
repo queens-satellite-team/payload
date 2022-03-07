@@ -37,10 +37,10 @@ def getGndA(FOVtrue_x, FOVtrue_y, sx, sy, fobj, feye, A):
     #using condition for sensor to contain enough ground area info
     M = fobj / feye
     gndAx_sensor = sx * M * gndAx
-    gndAy_sensor = sx * M * gndAy
+    gndAy_sensor = sy * M * gndAy
 
     return gndAx_sensor, gndAy_sensor
-
+ 
 def getRes(FOVtrue_x, FOVtrue_y, Sx, Sy):
     """
     Get ground resolution in x and y from true FOV and altitude
@@ -162,14 +162,22 @@ def main(sx, sy, pix_res_x, pix_res_y, verbose, plot=False):
 
 
     #map these indices to (feye, fobj) pairs
-    #valid_f_lengths = np.empty(inds.shape)
     def get_flengths(ind):
         return feyes[ind[0]], fobjs[ind[1]]
     valid_f_lengths = list(map(get_flengths, inds))
 
     if verbose > 0:
         for fl in valid_f_lengths:
-            print(f"The combination fobj: {fl[1]}, feye: {fl[0]} is valid")
+            FOV_truex, FOV_truey = getFOVtrue(fl[0], fl[1], sx, sy, A)
+            gndAx, gndAy = getGndA(FOV_truex, FOV_truey, sx, sy, fl[1], fl[0], A)
+            rx, ry = getRes(FOV_truex, FOV_truey, pix_res_x, pix_res_y)
+            print(f"The combination fobj: {fl[1]}, feye: {fl[0]} is valid: GNDA x = {gndAx}, y = {gndAy}, RES x = {rx}, y = {ry}")
+
+    #check 8cm, 5mm for LI7010SAC sensor
+    FOV_truex, FOV_truey = getFOVtrue(0.005, 0.08, sx, sy, A)
+    gndAx, gndAy = getGndA(FOV_truex, FOV_truey, sx, sy, 0.08, 0.005, A)
+    rx, ry = getRes(FOV_truex, FOV_truey, pix_res_x, pix_res_y)
+    print(f"For 8cm, 5mm: GNDA x = {gndAx}, y = {gndAy}, RES x = {rx}, y = {ry}")
 
     """
     #check if any of the lenses we have will work
