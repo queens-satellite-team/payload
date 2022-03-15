@@ -9,15 +9,12 @@ Save tiff file
 
 import argparse
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 from pathlib import Path
 import imageio
 
 def check(file_, pixcount, bit_depth, channels):
     im = Image.open(file_)
-
-
-    
     size = list(im.size)
     size.reverse()
     print(size)
@@ -26,15 +23,18 @@ def check(file_, pixcount, bit_depth, channels):
 
 def main(outpath, pixcount, bit_depth, channels):
 
+    #load source image
+    img = Image.open('test-images/sample_5184×3456.jpeg')
+
     print(f"Using pixel count {pixcount}")
-    fpath = Path(outpath, f'{pixcount}_{bit_depth}_{channels}.png')
+    fpath = Path(outpath, f'{pixcount}_{bit_depth}_{channels}.jpg')
     if channels == 'RGB':
-        data = np.random.randint(0, 255, (pixcount[0], pixcount[1], 3))
+        img = img.resize(pixcount, Image.ANTIALIAS)
     else:
-        data = np.random.randint(0, 255, pixcount)
+        img = img.resize(pixcount, Image.ANTIALIAS)
+        img = ImageOps.grayscale(img)
     
-    im = Image.fromarray(data.astype(np.uint16), "RGB")
-    imageio.imwrite(fpath, im)
+    imageio.imwrite(fpath, img, format='JPEG')
     return fpath
 
 

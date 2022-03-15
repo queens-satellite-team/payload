@@ -41,7 +41,7 @@ def getGndA(FOVtrue_x, FOVtrue_y, sx, sy, fobj, feye, A):
 
     return gndAx_sensor, gndAy_sensor
  
-def getRes(FOVtrue_x, FOVtrue_y, Sx, Sy):
+def getRes(FOVtrue_x, FOVtrue_y, px, px):
     """
     Get ground resolution in x and y from true FOV and altitude
     """
@@ -50,8 +50,8 @@ def getRes(FOVtrue_x, FOVtrue_y, Sx, Sy):
     gndAx = 2 * A * m.tan(FOVtrue_x)
     gndAy = 2 * A * m.tan(FOVtrue_y)
 
-    Rx = gndAx / Sx
-    Ry = gndAy / Sy
+    Rx = gndAx / px
+    Ry = gndAy / py
     return Rx, Ry
 
 def checkValid(fobj, feye, GndAx, GndAy, Resx, Resy, v):
