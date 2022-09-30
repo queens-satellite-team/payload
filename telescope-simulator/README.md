@@ -4,7 +4,7 @@ MATLAB code used to simulate and test the telescope performance and specificatio
 ## Resources
 * Optometrika library overview: https://www.mathworks.com/matlabcentral/fileexchange/45355-optometrika
 * Optometrika library github: https://github.com/caiuspetronius/Optometrika
-* Easy to understand, basic telescope optics: https://starizona.com/tutorial/imaging-with-a-refractor/
+* Easy to understand, basic telescope optics: https://starizona.com/blogs/tutorials/imaging-with-a-refractor
 * Everything and anything you wish to know about telescope optics: https://www.telescope-optics.net 
 
 
@@ -19,7 +19,7 @@ You need to make a Mathworks account, I think every queens student gets one by d
 to the same directory as my clone of the payload github)
 I also renamed mine from "github_repo" to "Optometrika" for clarity
 
-3. Add Optometrika folder to path:
+3. Add Optometrika folder to path(in Matlab terminal):
 addpath("[PATH TO OPTOMETRIKA DIR IN YOUR FILESYSTEM]")
 Example: addpath("C:\Users\Ben\Projects\Optometrika")
 
